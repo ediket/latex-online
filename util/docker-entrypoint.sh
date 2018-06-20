@@ -5,8 +5,6 @@ set -e
 rm -rf /var/www
 # Copy and install the latest & greatest Latex-Online
 git clone https://github.com/ediket/latex-online /var/www
-git fetch
-git checkout develop
 cd /var/www
 npm install .
 
