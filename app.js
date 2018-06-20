@@ -75,7 +75,7 @@ async function handleResult(res, preparation, force, downloadName) {
     // In case of URL compilation and cached compilation object, the downlaoder
     // has to be cleaned up.
     downloader.dispose();
-
+    logger.info("compilation", compilation);
     if (compilation.userError) {
         sendError(res, compilation.userError);
     } else if (compilation.success) {
@@ -122,6 +122,8 @@ app.get('/compile', async (req, res) => {
     var trackId = req.query.trackId;
     var isBrowser = !req.useragent.isBot;
     // Redirect browser to the page with analytics code.
+    logger.info("isBrowser", isBrowser);
+
     if (isBrowser && (!trackId || !pendingTrackIds.has(trackId))) {
         trackId = Date.now() + '';
         pendingTrackIds.add(trackId);
