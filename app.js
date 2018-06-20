@@ -35,7 +35,7 @@ function onInitialized(latex) {
     // Launch server.
     var port = process.env.PORT || 2700;
     var listener = app.listen(port, () => {
-        logger.info("Express server started (2)", {
+        logger.info("Express server started (3)", {
             port: listener.address().port,
             env: app.settings.env,
             sha: VERSION
@@ -75,7 +75,6 @@ async function handleResult(res, preparation, force, downloadName) {
     // In case of URL compilation and cached compilation object, the downlaoder
     // has to be cleaned up.
     downloader.dispose();
-    logger.info("compilation", compilation);
     if (compilation.userError) {
         sendError(res, compilation.userError);
     } else if (compilation.success) {
@@ -117,24 +116,22 @@ app.get('/pending', (req, res) => {
 var pendingTrackIds = new Set();
 app.get('/compile', async (req, res) => {
     // Do not leak too much memory if clients drop connections on redirect.
-    if (pendingTrackIds.size > 10000)
-        pendingTrackIds.clear();
-    var trackId = req.query.trackId;
-    var isBrowser = !req.useragent.isBot;
-    // Redirect browser to the page with analytics code.
-    logger.info("isBrowser", isBrowser);
+    // if (pendingTrackIds.size > 10000)
+    //     pendingTrackIds.clear();
+    // var trackId = req.query.trackId;
+    // var isBrowser = !req.useragent.isBot;
 
-    if (isBrowser && (!trackId || !pendingTrackIds.has(trackId))) {
-        trackId = Date.now() + '';
-        pendingTrackIds.add(trackId);
-        var query = Object.assign({}, req.query);
-        query.trackId = trackId;
-
-        var search = Object.keys(query).map(key => `${key}=${encodeURIComponent(query[key])}`).join('&');
-        res.redirect(307, `/pending?${search}`);
-        return;
-    }
-    pendingTrackIds.delete(trackId);
+    // if (isBrowser && (!trackId || !pendingTrackIds.has(trackId))) {
+    //     trackId = Date.now() + '';
+    //     pendingTrackIds.add(trackId);
+    //     var query = Object.assign({}, req.query);
+    //     query.trackId = trackId;
+    //
+    //     var search = Object.keys(query).map(key => `${key}=${encodeURIComponent(query[key])}`).join('&');
+    //     res.redirect(307, `/pending?${search}`);
+    //     return;
+    // }
+    // pendingTrackIds.delete(trackId);
 
     var forceCompilation = req.query && !!req.query.force;
     var command = req.query && req.query.command ? req.query.command : 'pdflatex';
