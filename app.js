@@ -101,6 +101,8 @@ app.post('/compile', async (req, res) => {
     command = command.trim().toLowerCase();
     var preparation;
 
+    logger.info('req.body', req.body);
+
     if (req.body.text) {
         preparation = await latexOnline.prepareTextCompilation(req.body.text, command);
     }
