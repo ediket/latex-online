@@ -48,12 +48,14 @@ var express = require('express');
 var compression = require('compression');
 var useragent = require('express-useragent');
 var bodyParser = require('body-parser');
+var cors = require('cors')
 
 var app = express();
 
 app.use(compression());
 app.use(useragent.express());
 app.use(express.static(__dirname + '/public'));
+app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
@@ -99,7 +101,6 @@ app.post('/compile', async (req, res) => {
     command = command.trim().toLowerCase();
     var preparation;
 
-    logger.info('req.body', req.body);
     if (req.body.text) {
         preparation = await latexOnline.prepareTextCompilation(req.body.text, command);
     }
